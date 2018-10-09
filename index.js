@@ -226,7 +226,11 @@ module.exports = (function () {
 
     for (i, len = flat.length; i < len; i++) {
       flatEl = flat[i];
-      id = flatEl[this.config.id];
+      if (typeof this.config.id === "function") {
+        id = this.config.id(flatEl);
+      } else {
+        id = flatEl[this.config.id];
+      }
 
       base.processItem(id, flatEl);
     }
