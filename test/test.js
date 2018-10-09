@@ -446,5 +446,40 @@ describe('flatToNested', function () {
         assert.deepEqual(actual, expected);
       });
     });
+
+    describe('using function to get id', function () {
+      var flatToNested;
+
+      flatToNested = new FlatToNested({
+        id: function(el) {
+          return el.config.id;
+        },
+        options:{
+          childrenBase: true
+        }
+      });
+
+      it('should convert using the correct id', function () {
+        var flat, expected, actual;
+
+        flat = [
+          {config: {id: 12}, value: 1},
+          {config: {id: 111}, value: 2},
+          {config: {id: 11}, children: [{config: {id: 111}}]},
+          {config: {id: 1}, children: [{config: {id: 11}}, {config: {id: 12}}]},
+        ];
+
+        expected = {config:{id: 1}, children: [
+          {config:{id: 11}, children: [
+            {config: {id: 111}, value: 2}
+          ]},
+          {config: {id: 12}, value: 1}
+        ]};
+
+        actual = flatToNested.convert(flat);
+
+        assert.deepEqual(actual, expected);
+      });
+    });
   });
 });

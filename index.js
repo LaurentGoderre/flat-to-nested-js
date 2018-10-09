@@ -135,7 +135,11 @@ module.exports = (function () {
       for (i, len = children.length; i < len; i++) {
         child = children[i];
         if (typeof(child) === "object") {
-          childId = child[this.config.id];
+          if (typeof this.config.id === "function") {
+            childId = this.config.id(child);
+          } else {
+            childId = child[this.config.id];
+          }
         } else {
           childId = child;
         }
