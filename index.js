@@ -176,7 +176,19 @@ module.exports = (function () {
       nested = roots[0];
     } else if (roots.length > 1) {
       nested = {};
-      nested[this.config.children] = roots;
+      if (Array.isArray(this.config.children)) {
+        this.config.children.reduce(function(accumulator, currentValue, i, arr){
+          accumulator[currentValue] = null
+
+          if (i < arr.length - 1) {
+            return accumulator[currentValue] = {};
+          } else {
+            accumulator[currentValue] = roots;
+          }
+        }, nested);
+      } else {
+        nested[this.config.children] = roots;
+      }
     } else {
       nested = {};
     }
